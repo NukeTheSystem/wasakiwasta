@@ -7,7 +7,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js"></script>
   <style>
-    /* (Existing styles remain unchanged) */
     * {
       margin: 0;
       padding: 0;
@@ -21,22 +20,43 @@
       background-size: cover;
       color: #fff;
     }
-    .sidebar { /* Sidebar styles */ }
-    .menu-toggle { /* Menu toggle styles */ }
-    .menu-item { /* Menu item styles */ }
-    .content { /* Content styles */ }
-    .tab-content { /* Tab content styles */ }
+    .sidebar {
+      width: 250px;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .menu-item {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .content {
+      margin-left: 250px;
+      padding: 20px;
+      flex-grow: 1;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <h1>Menu</h1>
+  <div class="sidebar">
+    <h2>Menu</h2>
     <div class="menu-item" onclick="showTab('sharedList')">Shared List</div>
     <div class="menu-item" onclick="showTab('status')">Status</div>
-    <div class="menu-toggle" onclick="toggleMenu()">
-      <span>&#9776;</span>
-    </div>
   </div>
 
   <!-- Main Content -->
@@ -52,7 +72,7 @@
   </div>
 
   <script>
-    // Firebase configuration (replace with your actual Firebase details)
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyANlb713cUSJ00z_w8k-pNXhh-i63UXzaY",
       authDomain: "ki-tools-ba9e1.firebaseapp.com",
@@ -66,26 +86,17 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.getAuth(app);
 
-    // Check authentication status
+    // Redirect if not authenticated
     firebase.onAuthStateChanged(auth, (user) => {
       if (!user) {
-        // Redirect to login page if not authenticated
-        window.location.href = "index.html";
+        window.location.href = "index.html"; // Redirect to login page
       }
     });
 
-    // Sidebar toggle
-    function toggleMenu() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('closed');
-    }
-
-    // Show tab content
+    // Tab switching logic
     function showTab(tabId) {
-      const contents = document.querySelectorAll('.tab-content');
-      contents.forEach(content => {
-        content.classList.remove('active');
-      });
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
     }
   </script>
