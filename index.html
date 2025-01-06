@@ -21,13 +21,13 @@
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      width: 400px;
+      width: 350px;
     }
     input {
       display: block;
-      width: 100%;
+      width: calc(100% - 30px);
       margin: 15px 0;
-      padding: 15px;
+      padding: 12px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 10px;
@@ -35,7 +35,7 @@
     button {
       background-color: #4CAF50;
       color: white;
-      padding: 15px;
+      padding: 12px;
       font-size: 16px;
       border: none;
       border-radius: 10px;
@@ -61,10 +61,10 @@
     <p id="loginMessage"></p>
   </form>
 
-  <!-- Firebase Libraries -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
-  
+  <!-- Correct Firebase CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
   <script>
     // Firebase configuration
     const firebaseConfig = {
