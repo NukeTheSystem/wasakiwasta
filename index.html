@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to My Website</title>
+  <title>My Awesome Website</title>
   <style>
     /* General reset */
-    body, h1, h2, h3, p, a, button {
+    body, h1, h2, h3, p, a, button, input, label {
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
@@ -66,9 +66,42 @@
       margin-bottom: 1rem;
     }
 
-    .container p {
+    .login-form {
+      background-color: #1e1e1e;
+      padding: 1.5rem;
+      border-radius: 8px;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .login-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #b0bec5;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    .login-form button {
+      background-color: #00bcd4;
+      color: #121212;
+      border: none;
+      padding: 0.5rem 1rem;
       font-size: 1rem;
-      margin-bottom: 1.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .login-form button:hover {
+      background-color: #0288d1;
     }
 
     footer {
@@ -97,24 +130,44 @@
   </nav>
 
   <div class="container">
-    <h2 id="about">About Me</h2>
-    <p>
-      Hi! I'm passionate about technology, programming, and creating awesome tools. Explore my projects and feel free to reach out!
-    </p>
-
-    <h2 id="projects">Projects</h2>
-    <p>
-      Check out my latest work, including ethical hacking tools, web applications, and open-source contributions.
-    </p>
-
-    <h2 id="contact">Contact</h2>
-    <p>
-      Feel free to connect with me via <a href="mailto:example@example.com">email</a> or on <a href="https://github.com/">GitHub</a>.
-    </p>
+    <h2>Login</h2>
+    <form class="login-form" onsubmit="handleLogin(event)">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+      
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+      
+      <button type="submit">Log In</button>
+    </form>
+    <p id="loginMessage" style="margin-top: 1rem; color: #ff5252;"></p>
   </div>
 
   <footer>
     <p>© 2025 My Website. All rights reserved.</p>
   </footer>
+
+  <script>
+    // Simple login handler
+    function handleLogin(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Hardcoded username and password for demo purposes
+      const validUsername = "admin";
+      const validPassword = "password123";
+
+      const message = document.getElementById('loginMessage');
+
+      if (username === validUsername && password === validPassword) {
+        message.style.color = "#00e676";
+        message.textContent = "Login successful!";
+      } else {
+        message.style.color = "#ff5252";
+        message.textContent = "Invalid username or password.";
+      }
+    }
+  </script>
 </body>
 </html>
