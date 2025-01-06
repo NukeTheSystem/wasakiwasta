@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ki Tools - Welcome</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background: linear-gradient(to bottom right, #4caf50, #2c3e50);
+      color: #fff;
+    }
+    .sidebar {
+      width: 250px;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+      position: fixed;
+    }
+    .sidebar.closed {
+      width: 60px;
+    }
+    .sidebar h1 {
+      margin: 20px 0;
+      font-size: 1.5em;
+      text-align: center;
+    }
+    .menu-toggle {
+      position: absolute;
+      top: 20px;
+      right: -25px;
+      width: 50px;
+      height: 50px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .menu-toggle span {
+      font-size: 1.5em;
+    }
+    .menu-item {
+      width: 100%;
+      padding: 15px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .content {
+      margin-left: 250px;
+      padding: 20px;
+      flex-grow: 1;
+      transition: margin-left 0.3s ease;
+    }
+    .sidebar.closed ~ .content {
+      margin-left: 60px;
+    }
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h1>Menu</h1>
+    <div class="menu-item" onclick="showTab('sharedList')">Shared List</div>
+    <div class="menu-item" onclick="showTab('status')">Status</div>
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <span>&#9776;</span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <div id="sharedList" class="tab-content active">
+      <h2>Shared List</h2>
+      <p>Welcome to the Shared List tab! Here you can manage and view shared items.</p>
+    </div>
+    <div id="status" class="tab-content">
+      <h2>Status</h2>
+      <p>This is the Status tab. View updates and system statuses here.</p>
+    </div>
+  </div>
+
+  <script>
+    // Toggle Sidebar
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('closed');
+    }
+
+    // Show Tab Content
+    function showTab(tabId) {
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(tabId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
