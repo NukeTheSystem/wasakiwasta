@@ -5,135 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ki Tools - Shared List</title>
   <style>
-    /* Global Styles */
+    /* Global Styling */
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       background: url('bg.gif') no-repeat center center fixed;
       background-size: cover;
-      color: #fff;
-      overflow: hidden;
     }
 
-    /* Overlay Effect */
-    #overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: -1;
-    }
-
-    /* Header Styles */
-    header {
-      background-color: rgba(0, 0, 0, 0.8);
-      padding: 20px;
-      text-align: center;
-      border-bottom: 2px solid cyan;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 32px;
-      text-transform: uppercase;
-      color: cyan;
-      text-shadow: 3px 3px 5px black;
-    }
-
-    header p {
-      margin: 10px 0 0;
-      font-size: 16px;
-      color: #ddd;
-    }
-
-    /* Main Container */
-    main {
-      padding: 20px;
-    }
-
-    #sharedList {
-      max-width: 900px;
-      margin: 20px auto;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 25px;
+    #container {
+      background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+      padding: 30px;
       border-radius: 15px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+      width: 90%;
+      max-width: 800px;
     }
 
-    /* List Section */
     h2 {
       text-align: center;
-      font-size: 24px;
-      margin-bottom: 20px;
       color: cyan;
+      margin-bottom: 20px;
       text-shadow: 2px 2px 5px black;
+    }
+
+    input {
+      display: block;
+      width: calc(100% - 30px);
+      margin: 15px auto;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    #listContainer {
+      margin-top: 20px;
     }
 
     ul {
       list-style: none;
       padding: 0;
-      margin: 0;
     }
 
     li {
-      background: rgba(0, 0, 0, 0.7);
+      background-color: rgba(255, 255, 255, 0.9);
       margin: 10px 0;
-      padding: 15px;
+      padding: 10px 15px;
       border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
-      transition: transform 0.3s, box-shadow 0.3s;
     }
 
-    li:hover {
-      transform: scale(1.02);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
-    }
-
-    li span {
-      font-size: 16px;
-    }
-
-    li .name {
+    .name {
       font-weight: bold;
-      color: cyan;
+      color: #333;
     }
 
-    li .details {
-      font-style: italic;
-      color: #aaa;
+    .details {
+      font-size: 14px;
+      color: #555;
     }
 
-    /* Filter Section */
-    #filterSection {
+    #version {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 5px 10px;
+      border-radius: 10px;
+    }
+
+    .loading,
+    .error {
       text-align: center;
-      margin-bottom: 20px;
-    }
-
-    #filterInput {
-      padding: 10px;
-      width: 350px;
-      border: none;
-      border-radius: 5px;
-      outline: none;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    #filterInput:focus {
-      border: 2px solid cyan;
-    }
-
-    /* Loading and Error Messages */
-    .loading, .error {
-      text-align: center;
-      font-size: 18px;
       margin-top: 20px;
+      font-size: 16px;
     }
 
     .loading {
@@ -143,70 +99,33 @@
     .error {
       color: red;
     }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.8);
-      color: #aaa;
-      margin-top: 20px;
-      font-size: 14px;
-      position: relative;
-    }
-
-    footer a {
-      color: cyan;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    footer .version {
-      position: absolute;
-      bottom: 5px;
-      right: 10px;
-      color: cyan;
-      font-size: 12px;
-    }
   </style>
 </head>
 <body>
-  <div id="overlay"></div>
-  <header>
-    <h1>Ki Tools - Shared List</h1>
-    <p>Securely manage and view your data</p>
-  </header>
+  <div id="container">
+    <h2>Ki Tools - Shared List</h2>
 
-  <main>
     <!-- Filter Input -->
-    <div id="filterSection">
-      <input type="text" id="filterInput" placeholder="Search by name..." oninput="filterList()">
-    </div>
+    <input type="text" id="filterInput" placeholder="Search by name..." oninput="filterList()">
 
     <!-- Shared List -->
-    <div id="sharedList">
-      <h2>Shared Items</h2>
+    <div id="listContainer">
+      <ul id="list"></ul>
       <div id="loadingMessage" class="loading">Loading data...</div>
-      <ul id="listContainer" style="display: none;"></ul>
-      <div id="errorMessage" class="error" style="display: none;">Failed to load shared list. Please try again.</div>
+      <div id="errorMessage" class="error" style="display: none;">Failed to load shared list.</div>
     </div>
-  </main>
+  </div>
 
-  <footer>
-    <p>© 2025 Ki Tools | Made with 💻 by <a href="#">Koiware</a></p>
-    <div class="version">Version 1.2</div>
-  </footer>
+  <!-- Version -->
+  <div id="version">Ver 1.2</div>
 
   <script>
-    const listContainer = document.getElementById('listContainer');
+    const listContainer = document.getElementById('list');
     const loadingMessage = document.getElementById('loadingMessage');
     const errorMessage = document.getElementById('errorMessage');
     const filterInput = document.getElementById('filterInput');
 
-    // Fetch and display shared list
+    // Fetch data from the shared list API
     async function fetchSharedList() {
       try {
         const response = await fetch('http://localhost:3000/get-shared-list');
@@ -218,13 +137,12 @@
           const li = document.createElement('li');
           li.innerHTML = `
             <span class="name">${item.name}</span>
-            <span class="details">KR: ${item.kr} | Level: ${item.level} | Nukes: ${item.nukes} | KDR: ${item.kdr}</span>
+            <span class="details">KR: ${item.kr}, Level: ${item.level}, Nukes: ${item.nukes}, KDR: ${item.kdr}</span>
           `;
           listContainer.appendChild(li);
         });
 
         loadingMessage.style.display = 'none';
-        listContainer.style.display = 'block';
       } catch (error) {
         console.error(error);
         loadingMessage.style.display = 'none';
@@ -232,17 +150,13 @@
       }
     }
 
-    // Filter list based on input
+    // Filter list functionality
     function filterList() {
       const filter = filterInput.value.toLowerCase();
       const items = listContainer.getElementsByTagName('li');
       Array.from(items).forEach(item => {
         const name = item.querySelector('.name').textContent.toLowerCase();
-        if (name.includes(filter)) {
-          item.style.display = '';
-        } else {
-          item.style.display = 'none';
-        }
+        item.style.display = name.includes(filter) ? '' : 'none';
       });
     }
 
