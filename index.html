@@ -7,18 +7,20 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      background: url('bg.gif') no-repeat center center fixed;
+      background-size: cover;
     }
     form {
-      background-color: #fff;
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
       width: 300px;
     }
     input {
@@ -67,7 +69,7 @@
       projectId: "ki-tools-ba9e1",
       storageBucket: "ki-tools-ba9e1.appspot.com",
       messagingSenderId: "1034407982635",
-      appId: "1:1034407982635:web:your-app-id" // Replace with your actual app ID from Firebase
+      appId: "1:1034407982635:web:your-app-id" // Replace with your actual app ID
     };
 
     // Initialize Firebase
