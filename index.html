@@ -16,7 +16,7 @@
       background: url('bg.gif') no-repeat center center fixed;
       background-size: cover;
     }
-    #loginForm, #welcomePage, #statusPage {
+    #loginForm, #welcomePage, #statusPage, #sharedListPage {
       background-color: rgba(255, 255, 255, 0.5);
       padding: 30px;
       border-radius: 15px;
@@ -64,20 +64,26 @@
       padding: 5px 10px;
       border-radius: 10px;
     }
-    #statusList {
-      list-style: none;
-      padding: 0;
+    #sharedList {
+      overflow-y: auto;
+      max-height: 300px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background: white;
+      border-radius: 10px;
     }
-    #statusList li {
-      margin-bottom: 10px;
-      font-size: 16px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #4CAF50;
       color: white;
-    }
-    .online {
-      color: green;
-    }
-    .offline {
-      color: red;
     }
   </style>
 </head>
@@ -96,7 +102,7 @@
     <h2>Welcome to Ki Tools</h2>
     <div id="menu">
       <button onclick="showStatusPage()">Bot Status</button>
-      <button onclick="alert('Shared List Clicked')">Shared List</button>
+      <button onclick="showSharedListPage()">Shared List</button>
     </div>
     <button onclick="logout()">Logout</button>
   </div>
@@ -111,8 +117,33 @@
     <button onclick="showWelcomePage()">Back</button>
   </div>
 
+  <!-- Shared List Page -->
+  <div id="sharedListPage">
+    <h2>Shared List</h2>
+    <div id="sharedList">
+      <table id="sharedListTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Password</th>
+            <th>KR</th>
+            <th>Level</th>
+            <th>Nukes</th>
+            <th>KDR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="6" style="text-align: center;">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button onclick="showWelcomePage()">Back</button>
+  </div>
+
   <!-- Version Display -->
-  <div id="version">Ver 0.8</div>
+  <div id="version">Ver 1.0</div>
 
   <!-- Correct Firebase CDN -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -133,13 +164,10 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Display login form on load
-    document.getElementById('loginForm').style.display = 'block';
-
-    // Handle login
     const loginForm = document.getElementById('loginForm');
     const welcomePage = document.getElementById('welcomePage');
     const statusPage = document.getElementById('statusPage');
+    const sharedListPage = document.getElementById('sharedListPage');
 
     loginForm.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -148,63 +176,62 @@
       const password = document.getElementById('password').value.trim();
 
       auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Successful login
-          document.getElementById('loginMessage').textContent = "Login successful!";
-          document.getElementById('loginMessage').style.color = "green";
-          console.log("Logged in user:", userCredential.user);
-
-          // Show welcome page
+        .then(() => {
           loginForm.style.display = 'none';
           welcomePage.style.display = 'block';
         })
-        .catch((error) => {
-          // Login error
+        .catch(() => {
           document.getElementById('loginMessage').textContent = "Invalid email or password.";
-          document.getElementById('loginMessage').style.color = "red";
-          console.error("Login error:", error.message);
         });
     });
 
-    // Handle logout
     function logout() {
       auth.signOut().then(() => {
         loginForm.style.display = 'block';
         welcomePage.style.display = 'none';
         statusPage.style.display = 'none';
+        sharedListPage.style.display = 'none';
       });
     }
 
-    // Show bot status page
     function showStatusPage() {
       welcomePage.style.display = 'none';
       statusPage.style.display = 'block';
     }
 
-    // Show welcome page
+    function showSharedListPage() {
+      welcomePage.style.display = 'none';
+      sharedListPage.style.display = 'block';
+
+      fetch('http://127.0.0.1:5000/get_shared_list')
+        .then(response => response.json())
+        .then(data => {
+          const tableBody = document.getElementById('sharedListTable').querySelector('tbody');
+          tableBody.innerHTML = '';
+          data.forEach(row => {
+            tableBody.innerHTML += `
+              <tr>
+                <td>${row.name}</td>
+                <td>${row.password}</td>
+                <td>${row.kr}</td>
+                <td>${row.level}</td>
+                <td>${row.nukes}</td>
+                <td>${row.kdr}</td>
+              </tr>
+            `;
+          });
+        })
+        .catch(() => {
+          const tableBody = document.getElementById('sharedListTable').querySelector('tbody');
+          tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Error loading data.</td></tr>';
+        });
+    }
+
     function showWelcomePage() {
+      sharedListPage.style.display = 'none';
       statusPage.style.display = 'none';
       welcomePage.style.display = 'block';
     }
-
-    // Fetch bot statuses
-    function fetchBotStatus() {
-      fetch('http://127.0.0.1:5000/get_status')
-        .then(response => response.json())
-        .then(data => {
-          // Update bot statuses
-          document.getElementById('bot1Status').querySelector('.status').textContent = data['Bot 1'] || 'Offline';
-          document.getElementById('bot1Status').querySelector('.status').className = data['Bot 1'] === 'Online' ? 'status online' : 'status offline';
-
-          document.getElementById('bot2Status').querySelector('.status').textContent = data['Bot 2'] || 'Offline';
-          document.getElementById('bot2Status').querySelector('.status').className = data['Bot 2'] === 'Online' ? 'status online' : 'status offline';
-        })
-        .catch(error => console.error('Error fetching bot statuses:', error));
-    }
-
-    // Poll the backend every 5 seconds
-    setInterval(fetchBotStatus, 5000);
-    fetchBotStatus();
   </script>
 </body>
 </html>
