@@ -4,91 +4,100 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ki Tools</title>
-  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
     body {
       font-family: Arial, sans-serif;
-      background: url('bg.gif') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
+      margin: 0;
+      padding: 0;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      background: url('bg.gif') no-repeat center center fixed;
+      background-size: cover;
     }
-    #login-section, #welcome-section {
+    #loginForm, #welcomePage {
+      background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      width: 350px;
       display: none;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 300px;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 10px;
-    }
-    #login-section.active, #welcome-section.active {
-      display: flex;
     }
     input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 5px;
+      display: block;
+      width: calc(100% - 30px);
+      margin: 15px 0;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
     }
     button {
-      padding: 10px;
-      background: #007BFF;
-      color: #fff;
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
       width: 100%;
     }
     button:hover {
-      background: #0056b3;
+      background-color: #45a049;
     }
-    .menu {
-      display: flex;
-      flex-direction: column;
-      margin-top: 20px;
-    }
-    .menu-item {
-      margin: 5px 0;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 5px;
-      cursor: pointer;
+    #loginMessage {
+      margin-top: 15px;
+      font-size: 16px;
       text-align: center;
     }
-    .menu-item:hover {
-      background: rgba(0, 0, 0, 0.9);
+    #welcomePage {
+      display: none;
+    }
+    #menu {
+      margin-top: 20px;
+    }
+    #menu button {
+      margin-bottom: 10px;
+    }
+    #version {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 5px 10px;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
-  <!-- Login Section -->
-  <div id="login-section" class="active">
-    <h1>Login</h1>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
+  <!-- Login Form -->
+  <form id="loginForm">
+    <h2 style="text-align: center;">Login to Ki Tools</h2>
+    <input type="email" id="username" placeholder="Enter email" required />
+    <input type="password" id="password" placeholder="Enter password" required />
+    <button type="submit">Login</button>
+    <p id="loginMessage"></p>
+  </form>
+
+  <!-- Welcome Page -->
+  <div id="welcomePage">
+    <h2>Welcome to Ki Tools</h2>
+    <div id="menu">
+      <button onclick="alert('Shared List Clicked')">Shared List</button>
+      <button onclick="alert('Status Clicked')">Status</button>
+    </div>
+    <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- Welcome Section -->
-  <div id="welcome-section">
-    <h1>Welcome to Ki Tools</h1>
-    <p>Explore the features and manage your tools seamlessly!</p>
-    <div class="menu">
-      <div class="menu-item" onclick="logout()">Logout</div>
-    </div>
-  </div>
+  <!-- Version Display -->
+  <div id="version">Ver 0.2</div>
+
+  <!-- Correct Firebase CDN -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
   <script>
     // Firebase configuration
@@ -98,42 +107,49 @@
       projectId: "ki-tools-ba9e1",
       storageBucket: "ki-tools-ba9e1.appspot.com",
       messagingSenderId: "1034407982635",
-      appId: "1:1034407982635:web:your-app-id"
+      appId: "1:1034407982635:web:your-app-id" // Replace 'your-app-id' with your actual Firebase app ID
     };
+
+    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.getAuth(app);
+    const auth = firebase.auth();
 
-    // Login functionality
-    async function login() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+    // Handle login
+    const loginForm = document.getElementById('loginForm');
+    const welcomePage = document.getElementById('welcomePage');
 
-      try {
-        await firebase.signInWithEmailAndPassword(auth, email, password);
-        document.getElementById('login-section').classList.remove('active');
-        document.getElementById('welcome-section').classList.add('active');
-      } catch (error) {
-        alert('Login failed: ' + error.message);
-      }
-    }
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
 
-    // Logout functionality
-    async function logout() {
-      await firebase.signOut(auth);
-      document.getElementById('welcome-section').classList.remove('active');
-      document.getElementById('login-section').classList.add('active');
-    }
+      const email = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
 
-    // Check if user is already logged in
-    firebase.onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('login-section').classList.remove('active');
-        document.getElementById('welcome-section').classList.add('active');
-      } else {
-        document.getElementById('welcome-section').classList.remove('active');
-        document.getElementById('login-section').classList.add('active');
-      }
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Successful login
+          document.getElementById('loginMessage').textContent = "Login successful!";
+          document.getElementById('loginMessage').style.color = "green";
+          console.log("Logged in user:", userCredential.user);
+
+          // Show welcome page
+          loginForm.style.display = 'none';
+          welcomePage.style.display = 'block';
+        })
+        .catch((error) => {
+          // Login error
+          document.getElementById('loginMessage').textContent = "Invalid email or password.";
+          document.getElementById('loginMessage').style.color = "red";
+          console.error("Login error:", error.message);
+        });
     });
+
+    // Handle logout
+    function logout() {
+      auth.signOut().then(() => {
+        loginForm.style.display = 'block';
+        welcomePage.style.display = 'none';
+      });
+    }
   </script>
 </body>
 </html>
