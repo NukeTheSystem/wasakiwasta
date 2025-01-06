@@ -3,235 +3,225 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ki Tools</title>
+  <title>Ki Tools - Shared List</title>
   <style>
+    /* Global Styles */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: url('bg.gif') no-repeat center center fixed;
-      background-size: cover;
+      background: linear-gradient(to bottom, #222, #555);
+      color: #fff;
     }
-    #loginForm, #welcomePage, #statusPage, #sharedListPage {
-      background-color: rgba(255, 255, 255, 0.5);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      width: 350px;
-      display: none;
-    }
-    input {
-      display: block;
-      width: calc(100% - 30px);
-      margin: 15px 0;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 12px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      width: 100%;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    #loginMessage {
-      margin-top: 15px;
-      font-size: 16px;
+
+    /* Header Styles */
+    header {
+      background-color: #333;
+      padding: 20px;
       text-align: center;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
     }
-    #menu button {
-      margin-bottom: 10px;
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      text-transform: uppercase;
+      color: cyan;
+      text-shadow: 2px 2px 3px black;
     }
-    #version {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
+
+    header p {
+      margin: 5px 0 0;
       font-size: 14px;
-      color: white;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 5px 10px;
-      border-radius: 10px;
+      color: #ddd;
     }
+
+    /* Main Container */
+    main {
+      padding: 20px;
+    }
+
     #sharedList {
-      overflow-y: auto;
-      max-height: 300px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      background: white;
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+    }
+
+    /* List Section */
+    h2 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: cyan;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      background: #444;
+      margin: 10px 0;
+      padding: 15px;
       border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
+
+    li:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
-    th, td {
+
+    li span {
+      font-size: 16px;
+    }
+
+    li .name {
+      font-weight: bold;
+      color: cyan;
+    }
+
+    li .details {
+      font-style: italic;
+      color: #aaa;
+    }
+
+    /* Filter Section */
+    #filterSection {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #filterInput {
       padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
+      width: 300px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     }
-    th {
-      background-color: #4CAF50;
-      color: white;
+
+    #filterInput:focus {
+      border: 2px solid cyan;
+    }
+
+    /* Loading and Error Messages */
+    .loading, .error {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    .loading {
+      color: cyan;
+    }
+
+    .error {
+      color: red;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #222;
+      color: #aaa;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: cyan;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <!-- Login Form -->
-  <form id="loginForm">
-    <h2 style="text-align: center;">Login to Ki Tools</h2>
-    <input type="email" id="username" placeholder="Enter email" required />
-    <input type="password" id="password" placeholder="Enter password" required />
-    <button type="submit">Login</button>
-    <p id="loginMessage"></p>
-  </form>
+  <header>
+    <h1>Ki Tools - Shared List</h1>
+    <p>Securely manage and view your data</p>
+  </header>
 
-  <!-- Welcome Page -->
-  <div id="welcomePage">
-    <h2>Welcome to Ki Tools</h2>
-    <div id="menu">
-      <button onclick="showStatusPage()">Bot Status</button>
-      <button onclick="showSharedListPage()">Shared List</button>
+  <main>
+    <!-- Filter Input -->
+    <div id="filterSection">
+      <input type="text" id="filterInput" placeholder="Search by name..." oninput="filterList()">
     </div>
-    <button onclick="logout()">Logout</button>
-  </div>
 
-  <!-- Bot Status Page -->
-  <div id="statusPage">
-    <h2>Bot Status</h2>
-    <ul id="statusList">
-      <li id="bot1Status">Bot 1: <span class="status">Loading...</span></li>
-      <li id="bot2Status">Bot 2: <span class="status">Loading...</span></li>
-    </ul>
-    <button onclick="showWelcomePage()">Back</button>
-  </div>
-
-  <!-- Shared List Page -->
-  <div id="sharedListPage">
-    <h2>Shared List</h2>
+    <!-- Shared List -->
     <div id="sharedList">
-      <table id="sharedListTable">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Password</th>
-            <th>KR</th>
-            <th>Level</th>
-            <th>Nukes</th>
-            <th>KDR</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td colspan="6" style="text-align: center;">Loading...</td>
-          </tr>
-        </tbody>
-      </table>
+      <h2>Shared Items</h2>
+      <div id="loadingMessage" class="loading">Loading data...</div>
+      <ul id="listContainer" style="display: none;"></ul>
+      <div id="errorMessage" class="error" style="display: none;">Failed to load shared list. Please try again.</div>
     </div>
-    <button onclick="showWelcomePage()">Back</button>
-  </div>
+  </main>
 
-  <!-- Version Display -->
-  <div id="version">Ver 1.0</div>
-
-  <!-- Correct Firebase CDN -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <footer>
+    <p>© 2025 Ki Tools | Made with 💻 by <a href="#">Koiware</a></p>
+  </footer>
 
   <script>
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyANlb713cUSJ00z_w8k-pNXhh-i63UXzaY",
-      authDomain: "ki-tools-ba9e1.firebaseapp.com",
-      projectId: "ki-tools-ba9e1",
-      storageBucket: "ki-tools-ba9e1.appspot.com",
-      messagingSenderId: "1034407982635",
-      appId: "1:1034407982635:web:your-app-id" // Replace 'your-app-id' with your actual Firebase app ID
-    };
+    const listContainer = document.getElementById('listContainer');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const filterInput = document.getElementById('filterInput');
 
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+    // Fetch and display shared list
+    async function fetchSharedList() {
+      try {
+        const response = await fetch('http://localhost:3000/get-shared-list');
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+        const data = await response.json();
 
-    const loginForm = document.getElementById('loginForm');
-    const welcomePage = document.getElementById('welcomePage');
-    const statusPage = document.getElementById('statusPage');
-    const sharedListPage = document.getElementById('sharedListPage');
-
-    loginForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      const email = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          loginForm.style.display = 'none';
-          welcomePage.style.display = 'block';
-        })
-        .catch(() => {
-          document.getElementById('loginMessage').textContent = "Invalid email or password.";
+        // Populate the list
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <span class="name">${item.name}</span>
+            <span class="details">KR: ${item.kr} | Level: ${item.level} | Nukes: ${item.nukes} | KDR: ${item.kdr}</span>
+          `;
+          listContainer.appendChild(li);
         });
-    });
 
-    function logout() {
-      auth.signOut().then(() => {
-        loginForm.style.display = 'block';
-        welcomePage.style.display = 'none';
-        statusPage.style.display = 'none';
-        sharedListPage.style.display = 'none';
+        loadingMessage.style.display = 'none';
+        listContainer.style.display = 'block';
+      } catch (error) {
+        console.error(error);
+        loadingMessage.style.display = 'none';
+        errorMessage.style.display = 'block';
+      }
+    }
+
+    // Filter list based on input
+    function filterList() {
+      const filter = filterInput.value.toLowerCase();
+      const items = listContainer.getElementsByTagName('li');
+      Array.from(items).forEach(item => {
+        const name = item.querySelector('.name').textContent.toLowerCase();
+        if (name.includes(filter)) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
       });
     }
 
-    function showStatusPage() {
-      welcomePage.style.display = 'none';
-      statusPage.style.display = 'block';
-    }
-
-    function showSharedListPage() {
-      welcomePage.style.display = 'none';
-      sharedListPage.style.display = 'block';
-
-      fetch('http://127.0.0.1:5000/get_shared_list')
-        .then(response => response.json())
-        .then(data => {
-          const tableBody = document.getElementById('sharedListTable').querySelector('tbody');
-          tableBody.innerHTML = '';
-          data.forEach(row => {
-            tableBody.innerHTML += `
-              <tr>
-                <td>${row.name}</td>
-                <td>${row.password}</td>
-                <td>${row.kr}</td>
-                <td>${row.level}</td>
-                <td>${row.nukes}</td>
-                <td>${row.kdr}</td>
-              </tr>
-            `;
-          });
-        })
-        .catch(() => {
-          const tableBody = document.getElementById('sharedListTable').querySelector('tbody');
-          tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Error loading data.</td></tr>';
-        });
-    }
-
-    function showWelcomePage() {
-      sharedListPage.style.display = 'none';
-      statusPage.style.display = 'none';
-      welcomePage.style.display = 'block';
-    }
+    // Initialize the page
+    fetchSharedList();
   </script>
 </body>
 </html>
