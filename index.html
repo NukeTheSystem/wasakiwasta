@@ -18,29 +18,29 @@
     }
     form {
       background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
-      padding: 30px; /* Increase padding for larger form */
-      border-radius: 15px; /* Slightly more rounded corners */
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Softer shadow */
-      width: 400px; /* Increase width */
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      width: 400px;
     }
     input {
       display: block;
       width: 100%;
-      margin: 15px 0; /* Increase margin for spacing */
-      padding: 15px; /* Larger input fields */
-      font-size: 16px; /* Larger text */
+      margin: 15px 0;
+      padding: 15px;
+      font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 10px;
     }
     button {
       background-color: #4CAF50;
       color: white;
-      padding: 15px; /* Larger button */
-      font-size: 16px; /* Larger text */
+      padding: 15px;
+      font-size: 16px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      width: 100%; /* Button spans full width */
+      width: 100%;
     }
     button:hover {
       background-color: #45a049;
@@ -55,7 +55,7 @@
 <body>
   <form id="loginForm" onsubmit="handleLogin(event)">
     <h2 style="text-align: center;">Login to Ki Tools</h2>
-    <input type="text" id="username" placeholder="Enter email" required />
+    <input type="email" id="username" placeholder="Enter email" required />
     <input type="password" id="password" placeholder="Enter password" required />
     <button type="submit">Login</button>
     <p id="loginMessage"></p>
@@ -73,7 +73,7 @@
       projectId: "ki-tools-ba9e1",
       storageBucket: "ki-tools-ba9e1.appspot.com",
       messagingSenderId: "1034407982635",
-      appId: "1:1034407982635:web:your-app-id" // Replace with your actual app ID
+      appId: "1:1034407982635:web:your-app-id" // Replace 'your-app-id' with your actual Firebase app ID
     };
 
     // Initialize Firebase
@@ -84,8 +84,8 @@
     function handleLogin(event) {
       event.preventDefault();
 
-      const email = document.getElementById('username').value.trim(); // User email
-      const password = document.getElementById('password').value.trim(); // User password
+      const email = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
 
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
@@ -93,6 +93,9 @@
           document.getElementById('loginMessage').textContent = "Login successful!";
           document.getElementById('loginMessage').style.color = "green";
           console.log("Logged in user:", userCredential.user);
+
+          // Redirect or do something on successful login
+          window.location.href = "welcome.html"; // Change this to your destination
         })
         .catch((error) => {
           // Login error
