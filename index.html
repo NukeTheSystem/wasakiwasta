@@ -17,12 +17,12 @@
       background: url('bg.gif') no-repeat center center fixed;
       background-size: cover;
       color: #fff;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
-    #login-section, #app-section {
+    #login-section, #welcome-section {
       display: none;
       flex-direction: column;
       align-items: center;
@@ -32,7 +32,7 @@
       background: rgba(255, 255, 255, 0.5);
       border-radius: 10px;
     }
-    #login-section.active, #app-section.active {
+    #login-section.active, #welcome-section.active {
       display: flex;
     }
     input {
@@ -70,12 +70,6 @@
     .menu-item:hover {
       background: rgba(0, 0, 0, 0.9);
     }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
   </style>
 </head>
 <body>
@@ -87,21 +81,12 @@
     <button onclick="login()">Login</button>
   </div>
 
-  <!-- App Section -->
-  <div id="app-section">
+  <!-- Welcome Section -->
+  <div id="welcome-section">
     <h1>Welcome to Ki Tools</h1>
+    <p>Explore the features and manage your tools seamlessly!</p>
     <div class="menu">
-      <div class="menu-item" onclick="showTab('sharedList')">Shared List</div>
-      <div class="menu-item" onclick="showTab('status')">Status</div>
       <div class="menu-item" onclick="logout()">Logout</div>
-    </div>
-    <div id="sharedList" class="tab-content active">
-      <h2>Shared List</h2>
-      <p>Manage and view shared items here.</p>
-    </div>
-    <div id="status" class="tab-content">
-      <h2>Status</h2>
-      <p>View system statuses and updates here.</p>
     </div>
   </div>
 
@@ -126,7 +111,7 @@
       try {
         await firebase.signInWithEmailAndPassword(auth, email, password);
         document.getElementById('login-section').classList.remove('active');
-        document.getElementById('app-section').classList.add('active');
+        document.getElementById('welcome-section').classList.add('active');
       } catch (error) {
         alert('Login failed: ' + error.message);
       }
@@ -135,24 +120,17 @@
     // Logout functionality
     async function logout() {
       await firebase.signOut(auth);
-      document.getElementById('app-section').classList.remove('active');
+      document.getElementById('welcome-section').classList.remove('active');
       document.getElementById('login-section').classList.add('active');
-    }
-
-    // Show tabs
-    function showTab(tabId) {
-      const tabs = document.querySelectorAll('.tab-content');
-      tabs.forEach(tab => tab.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
     }
 
     // Check if user is already logged in
     firebase.onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById('login-section').classList.remove('active');
-        document.getElementById('app-section').classList.add('active');
+        document.getElementById('welcome-section').classList.add('active');
       } else {
-        document.getElementById('app-section').classList.remove('active');
+        document.getElementById('welcome-section').classList.remove('active');
         document.getElementById('login-section').classList.add('active');
       }
     });
