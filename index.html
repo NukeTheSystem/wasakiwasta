@@ -51,14 +51,25 @@
       font-size: 16px;
       text-align: center;
     }
-    #welcomePage {
-      display: none;
-    }
     #menu {
       margin-top: 20px;
     }
     #menu button {
       margin-bottom: 10px;
+    }
+    .status-container {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      color: white;
+    }
+    .status {
+      font-weight: bold;
+      color: #4CAF50;
+    }
+    .status.offline {
+      color: #D50000;
     }
     #version {
       position: absolute;
@@ -87,7 +98,18 @@
     <h2>Welcome to Ki Tools</h2>
     <div id="menu">
       <button onclick="alert('Shared List Clicked')">Shared List</button>
-      <button onclick="alert('Status Clicked')">Status</button>
+      <button onclick="showStatus()">Status</button>
+    </div>
+    <div class="status-container" id="statusContainer" style="display: none;">
+      <h3>Bot Status</h3>
+      <div id="bot1" class="bot-status">
+        <h4>Bot 1</h4>
+        <p>Status: <span id="bot1Status" class="status">Loading...</span></p>
+      </div>
+      <div id="bot2" class="bot-status">
+        <h4>Bot 2</h4>
+        <p>Status: <span id="bot2Status" class="status">Loading...</span></p>
+      </div>
     </div>
     <button onclick="logout()">Logout</button>
   </div>
@@ -95,10 +117,9 @@
   <!-- Version Display -->
   <div id="version">Ver 0.3</div>
 
-  <!-- Correct Firebase CDN -->
+  <!-- Firebase and Script -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-
   <script>
     // Firebase configuration
     const firebaseConfig = {
@@ -107,7 +128,7 @@
       projectId: "ki-tools-ba9e1",
       storageBucket: "ki-tools-ba9e1.appspot.com",
       messagingSenderId: "1034407982635",
-      appId: "1:1034407982635:web:your-app-id" // Replace 'your-app-id' with your actual Firebase app ID
+      appId: "1:1034407982635:web:your-app-id" // Replace with your Firebase app ID
     };
 
     // Initialize Firebase
@@ -120,6 +141,7 @@
     // Handle login
     const loginForm = document.getElementById('loginForm');
     const welcomePage = document.getElementById('welcomePage');
+    const statusContainer = document.getElementById('statusContainer');
 
     loginForm.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -129,20 +151,14 @@
 
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Successful login
           document.getElementById('loginMessage').textContent = "Login successful!";
           document.getElementById('loginMessage').style.color = "green";
-          console.log("Logged in user:", userCredential.user);
-
-          // Show welcome page
           loginForm.style.display = 'none';
           welcomePage.style.display = 'block';
         })
         .catch((error) => {
-          // Login error
           document.getElementById('loginMessage').textContent = "Invalid email or password.";
           document.getElementById('loginMessage').style.color = "red";
-          console.error("Login error:", error.message);
         });
     });
 
@@ -151,7 +167,24 @@
       auth.signOut().then(() => {
         loginForm.style.display = 'block';
         welcomePage.style.display = 'none';
+        statusContainer.style.display = 'none';
       });
+    }
+
+    // Show bot statuses
+    function showStatus() {
+      statusContainer.style.display = 'block';
+
+      fetch('https://krunk.pro/api/bot-status') // Replace with your Flask API endpoint
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('bot1Status').textContent = data.bot1.isOnline ? 'Online' : 'Offline';
+          document.getElementById('bot1Status').className = data.bot1.isOnline ? 'status' : 'status offline';
+
+          document.getElementById('bot2Status').textContent = data.bot2.isOnline ? 'Online' : 'Offline';
+          document.getElementById('bot2Status').className = data.bot2.isOnline ? 'status' : 'status offline';
+        })
+        .catch(error => console.error('Error fetching bot statuses:', error));
     }
   </script>
 </body>
