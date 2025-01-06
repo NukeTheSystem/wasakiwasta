@@ -10,29 +10,43 @@
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom, #222, #444);
+      background: url('bg.gif') no-repeat center center fixed;
+      background-size: cover;
       color: #fff;
+      overflow: hidden;
+    }
+
+    /* Overlay Effect */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
     }
 
     /* Header Styles */
     header {
-      background-color: #333;
+      background-color: rgba(0, 0, 0, 0.8);
       padding: 20px;
       text-align: center;
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+      border-bottom: 2px solid cyan;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
     }
 
     header h1 {
       margin: 0;
-      font-size: 28px;
+      font-size: 32px;
       text-transform: uppercase;
       color: cyan;
-      text-shadow: 2px 2px 3px black;
+      text-shadow: 3px 3px 5px black;
     }
 
     header p {
-      margin: 5px 0 0;
-      font-size: 14px;
+      margin: 10px 0 0;
+      font-size: 16px;
       color: #ddd;
     }
 
@@ -43,19 +57,20 @@
 
     #sharedList {
       max-width: 900px;
-      margin: 0 auto;
+      margin: 20px auto;
       background: rgba(0, 0, 0, 0.8);
       padding: 25px;
       border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.9);
     }
 
     /* List Section */
     h2 {
       text-align: center;
-      font-size: 22px;
+      font-size: 24px;
       margin-bottom: 20px;
       color: cyan;
+      text-shadow: 2px 2px 5px black;
     }
 
     ul {
@@ -65,20 +80,20 @@
     }
 
     li {
-      background: #444;
+      background: rgba(0, 0, 0, 0.7);
       margin: 10px 0;
       padding: 15px;
       border-radius: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     li:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      transform: scale(1.02);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
     }
 
     li span {
@@ -103,11 +118,11 @@
 
     #filterInput {
       padding: 10px;
-      width: 300px;
+      width: 350px;
       border: none;
       border-radius: 5px;
       outline: none;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
 
     #filterInput:focus {
@@ -133,7 +148,7 @@
     footer {
       text-align: center;
       padding: 15px;
-      background: #222;
+      background: rgba(0, 0, 0, 0.8);
       color: #aaa;
       margin-top: 20px;
       font-size: 14px;
@@ -159,6 +174,7 @@
   </style>
 </head>
 <body>
+  <div id="overlay"></div>
   <header>
     <h1>Ki Tools - Shared List</h1>
     <p>Securely manage and view your data</p>
