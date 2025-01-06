@@ -16,7 +16,7 @@
       background: url('bg.gif') no-repeat center center fixed;
       background-size: cover;
     }
-    .page {
+    #loginForm, #welcomePage, #statusPage {
       background-color: rgba(255, 255, 255, 0.5);
       padding: 30px;
       border-radius: 15px;
@@ -51,18 +51,8 @@
       font-size: 16px;
       text-align: center;
     }
-    .status-container {
-      padding: 20px;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 15px;
-      color: white;
-    }
-    .status {
-      font-weight: bold;
-      color: #4CAF50;
-    }
-    .status.offline {
-      color: #D50000;
+    #menu button {
+      margin-bottom: 10px;
     }
     #version {
       position: absolute;
@@ -74,11 +64,26 @@
       padding: 5px 10px;
       border-radius: 10px;
     }
+    #statusList {
+      list-style: none;
+      padding: 0;
+    }
+    #statusList li {
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: white;
+    }
+    .online {
+      color: green;
+    }
+    .offline {
+      color: red;
+    }
   </style>
 </head>
 <body>
-  <!-- Login Page -->
-  <form id="loginForm" class="page">
+  <!-- Login Form -->
+  <form id="loginForm">
     <h2 style="text-align: center;">Login to Ki Tools</h2>
     <input type="email" id="username" placeholder="Enter email" required />
     <input type="password" id="password" placeholder="Enter password" required />
@@ -86,37 +91,33 @@
     <p id="loginMessage"></p>
   </form>
 
-  <!-- Menu Page -->
-  <div id="menuPage" class="page">
+  <!-- Welcome Page -->
+  <div id="welcomePage">
     <h2>Welcome to Ki Tools</h2>
     <div id="menu">
-      <button onclick="switchToPage('statusPage')">Bot Status</button>
+      <button onclick="showStatusPage()">Bot Status</button>
       <button onclick="alert('Shared List Clicked')">Shared List</button>
     </div>
     <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- Status Page -->
-  <div id="statusPage" class="page">
+  <!-- Bot Status Page -->
+  <div id="statusPage">
     <h2>Bot Status</h2>
-    <div class="status-container" id="statusContainer">
-      <div id="bot1" class="bot-status">
-        <h4>Bot 1</h4>
-        <p>Status: <span id="bot1Status" class="status offline">Offline</span></p>
-      </div>
-      <div id="bot2" class="bot-status">
-        <h4>Bot 2</h4>
-        <p>Status: <span id="bot2Status" class="status offline">Offline</span></p>
-      </div>
-    </div>
-    <button onclick="switchToPage('menuPage')">Back to Menu</button>
+    <ul id="statusList">
+      <li id="bot1Status">Bot 1: <span class="status">Loading...</span></li>
+      <li id="bot2Status">Bot 2: <span class="status">Loading...</span></li>
+    </ul>
+    <button onclick="showWelcomePage()">Back</button>
   </div>
 
   <!-- Version Display -->
-  <div id="version">Ver 0.7</div>
+  <div id="version">Ver 0.3</div>
 
+  <!-- Correct Firebase CDN -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
   <script>
     // Firebase configuration
     const firebaseConfig = {
@@ -125,57 +126,85 @@
       projectId: "ki-tools-ba9e1",
       storageBucket: "ki-tools-ba9e1.appspot.com",
       messagingSenderId: "1034407982635",
-      appId: "1:1034407982635:web:your-app-id"
+      appId: "1:1034407982635:web:your-app-id" // Replace 'your-app-id' with your actual Firebase app ID
     };
 
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Page Management
-    const pages = ['loginForm', 'menuPage', 'statusPage'];
-    function switchToPage(pageId) {
-      pages.forEach(id => document.getElementById(id).style.display = 'none');
-      document.getElementById(pageId).style.display = 'block';
-    }
+    // Display login form on load
+    document.getElementById('loginForm').style.display = 'block';
 
-    // Initialize to login form
-    switchToPage('loginForm');
-
-    // Handle Login
+    // Handle login
     const loginForm = document.getElementById('loginForm');
+    const welcomePage = document.getElementById('welcomePage');
+    const statusPage = document.getElementById('statusPage');
+
     loginForm.addEventListener('submit', (event) => {
       event.preventDefault();
-      auth.signInWithEmailAndPassword(
-        document.getElementById('username').value.trim(),
-        document.getElementById('password').value.trim()
-      )
-      .then(() => {
-        switchToPage('menuPage');
-      })
-      .catch((error) => {
-        document.getElementById('loginMessage').textContent = "Invalid email or password.";
-        document.getElementById('loginMessage').style.color = "red";
-      });
+
+      const email = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Successful login
+          document.getElementById('loginMessage').textContent = "Login successful!";
+          document.getElementById('loginMessage').style.color = "green";
+          console.log("Logged in user:", userCredential.user);
+
+          // Show welcome page
+          loginForm.style.display = 'none';
+          welcomePage.style.display = 'block';
+        })
+        .catch((error) => {
+          // Login error
+          document.getElementById('loginMessage').textContent = "Invalid email or password.";
+          document.getElementById('loginMessage').style.color = "red";
+          console.error("Login error:", error.message);
+        });
     });
 
-    // Logout
+    // Handle logout
     function logout() {
       auth.signOut().then(() => {
-        switchToPage('loginForm');
+        loginForm.style.display = 'block';
+        welcomePage.style.display = 'none';
+        statusPage.style.display = 'none';
       });
     }
 
-    // Simulating Bot Online/Offline Status
-    function toggleBotStatus(botId, isOnline) {
-      const statusElement = document.getElementById(botId + 'Status');
-      statusElement.textContent = isOnline ? 'Online' : 'Offline';
-      statusElement.className = isOnline ? 'status' : 'status offline';
+    // Show bot status page
+    function showStatusPage() {
+      welcomePage.style.display = 'none';
+      statusPage.style.display = 'block';
     }
 
-    // Example: Make bots online
-    setTimeout(() => toggleBotStatus('bot1', true), 2000); // Bot 1 online in 2s
-    setTimeout(() => toggleBotStatus('bot2', true), 5000); // Bot 2 online in 5s
+    // Show welcome page
+    function showWelcomePage() {
+      statusPage.style.display = 'none';
+      welcomePage.style.display = 'block';
+    }
+
+    // Fetch bot statuses
+    function fetchBotStatus() {
+      fetch('http://127.0.0.1:5000/get_status')
+        .then(response => response.json())
+        .then(data => {
+          // Update bot statuses
+          document.getElementById('bot1Status').querySelector('.status').textContent = data['Bot 1'] || 'Offline';
+          document.getElementById('bot1Status').querySelector('.status').className = data['Bot 1'] === 'Online' ? 'status online' : 'status offline';
+
+          document.getElementById('bot2Status').querySelector('.status').textContent = data['Bot 2'] || 'Offline';
+          document.getElementById('bot2Status').querySelector('.status').className = data['Bot 2'] === 'Online' ? 'status online' : 'status offline';
+        })
+        .catch(error => console.error('Error fetching bot statuses:', error));
+    }
+
+    // Poll the backend every 5 seconds
+    setInterval(fetchBotStatus, 5000);
+    fetchBotStatus();
   </script>
 </body>
 </html>
