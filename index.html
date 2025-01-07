@@ -132,6 +132,140 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ki tools</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      background: url('bg.gif') no-repeat center center fixed;
+      background-size: cover;
+    }
+    #menu {
+      width: 200px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 15px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    }
+    #menu button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+    #menu button:hover {
+      background-color: #45a049;
+    }
+    #content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #loginForm, #welcomePage {
+      background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      width: 350px;
+      display: none;
+    }
+    input {
+      display: block;
+      width: calc(100% - 30px);
+      margin: 15px 0;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #loginMessage {
+      margin-top: 15px;
+      font-size: 16px;
+      text-align: center;
+    }
+    #sharedListPage {
+      display: none;
+    }
+    #version {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 5px 10px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu -->
+  <div id="menu">
+    <h3>Menu</h3>
+    <button onclick="navigateTo('login')">Login</button>
+    <button onclick="navigateTo('sharedList')">Shared List</button>
+    <button onclick="navigateTo('status')">Status</button>
+    <button onclick="navigateTo('settings')">Settings</button>
+  </div>
+
+  <!-- Content Area -->
+  <div id="content">
+    <!-- Login Form -->
+    <form id="loginForm">
+      <h2 style="text-align: center;">login to ki tools</h2>
+      <input type="email" id="username" placeholder="Enter email" required />
+      <input type="password" id="password" placeholder="Enter password" required />
+      <button type="submit">Login</button>
+      <p id="loginMessage"></p>
+    </form>
+
+    <!-- Welcome Page -->
+    <div id="welcomePage">
+      <h2>Welcome to ki tools</h2>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Shared List Page -->
+    <div id="sharedListPage">
+      <h2>Shared List</h2>
+      <div id="listContainer"></div>
+      <button onclick="goBack()">Back</button>
+    </div>
+  </div>
+
+  <!-- Version Display -->
+  <div id="version">Ver 2.0</div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
   <script>
     // Firebase configuration
     const firebaseConfig = {
@@ -198,5 +332,8 @@
       welcomePage.style.display = 'block';
     }
   </script>
+</body>
+</html>
+
 </body>
 </html>
