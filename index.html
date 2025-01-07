@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ki Tools - Shared List</title>
+  <title>Ki Tools</title>
   <style>
-    /* Global Styling */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -17,151 +16,159 @@
       background: url('bg.gif') no-repeat center center fixed;
       background-size: cover;
     }
-
-    #container {
-      background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+    #loginForm, #welcomePage {
+      background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
       padding: 30px;
       border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-      width: 90%;
-      max-width: 800px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      width: 350px;
+      display: none;
     }
-
-    h2 {
-      text-align: center;
-      color: cyan;
-      margin-bottom: 20px;
-      text-shadow: 2px 2px 5px black;
-    }
-
     input {
       display: block;
       width: calc(100% - 30px);
-      margin: 15px auto;
+      margin: 15px 0;
       padding: 12px;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.9);
     }
-
-    #listContainer {
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #loginMessage {
+      margin-top: 15px;
+      font-size: 16px;
+      text-align: center;
+    }
+    #welcomePage {
+      display: none;
+    }
+    #menu {
       margin-top: 20px;
     }
-
-    ul {
-      list-style: none;
-      padding: 0;
+    #menu button {
+      margin-bottom: 10px;
     }
-
-    li {
-      background-color: rgba(255, 255, 255, 0.9);
-      margin: 10px 0;
-      padding: 10px 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .name {
-      font-weight: bold;
-      color: #333;
-    }
-
-    .details {
-      font-size: 14px;
-      color: #555;
-    }
-
     #version {
       position: absolute;
       bottom: 10px;
       right: 10px;
       font-size: 14px;
       color: white;
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.5);
       padding: 5px 10px;
       border-radius: 10px;
-    }
-
-    .loading,
-    .error {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 16px;
-    }
-
-    .loading {
-      color: cyan;
-    }
-
-    .error {
-      color: red;
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <h2>Ki Tools - Shared List</h2>
+  <!-- Login Form -->
+  <form id="loginForm">
+    <h2 style="text-align: center;">Login to Ki Tools</h2>
+    <input type="email" id="username" placeholder="Enter email" required />
+    <input type="password" id="password" placeholder="Enter password" required />
+    <button type="submit">Login</button>
+    <p id="loginMessage"></p>
+  </form>
 
-    <!-- Filter Input -->
-    <input type="text" id="filterInput" placeholder="Search by name..." oninput="filterList()">
-
-    <!-- Shared List -->
-    <div id="listContainer">
-      <ul id="list"></ul>
-      <div id="loadingMessage" class="loading">Loading data...</div>
-      <div id="errorMessage" class="error" style="display: none;">Failed to load shared list.</div>
+  <!-- Welcome Page -->
+  <div id="welcomePage">
+    <h2>Welcome to Ki Tools</h2>
+    <div id="menu">
+      <button onclick="navigateTo('sharedList')">Shared List</button>
+      <button onclick="navigateTo('status')">Status</button>
+      <button onclick="navigateTo('settings')">Settings</button>
     </div>
+    <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- Version -->
+  <!-- Shared List Page -->
+  <div id="sharedListPage" style="display:none;">
+    <h2>Shared List</h2>
+    <div id="listContainer"></div>
+    <button onclick="goBack()">Back</button>
+  </div>
+
+  <!-- Version Display -->
   <div id="version">Ver 1.2</div>
 
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
   <script>
-    const listContainer = document.getElementById('list');
-    const loadingMessage = document.getElementById('loadingMessage');
-    const errorMessage = document.getElementById('errorMessage');
-    const filterInput = document.getElementById('filterInput');
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyANlb713cUSJ00z_w8k-pNXhh-i63UXzaY",
+      authDomain: "ki-tools-ba9e1.firebaseapp.com",
+      projectId: "ki-tools-ba9e1",
+      storageBucket: "ki-tools-ba9e1.appspot.com",
+      messagingSenderId: "1034407982635",
+      appId: "1:1034407982635:web:your-app-id" // Replace 'your-app-id' with your actual Firebase app ID
+    };
 
-    // Fetch data from the shared list API
-    async function fetchSharedList() {
-      try {
-        const response = await fetch('http://localhost:3000/get-shared-list');
-        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-        const data = await response.json();
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-        // Populate the list
-        data.forEach(item => {
-          const li = document.createElement('li');
-          li.innerHTML = `
-            <span class="name">${item.name}</span>
-            <span class="details">KR: ${item.kr}, Level: ${item.level}, Nukes: ${item.nukes}, KDR: ${item.kdr}</span>
-          `;
-          listContainer.appendChild(li);
+    // Show login form on load
+    document.getElementById('loginForm').style.display = 'block';
+
+    const loginForm = document.getElementById('loginForm');
+    const welcomePage = document.getElementById('welcomePage');
+    const sharedListPage = document.getElementById('sharedListPage');
+
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          document.getElementById('loginMessage').textContent = "Login successful!";
+          document.getElementById('loginMessage').style.color = "green";
+
+          loginForm.style.display = 'none';
+          welcomePage.style.display = 'block';
+        })
+        .catch((error) => {
+          document.getElementById('loginMessage').textContent = "Invalid email or password.";
+          document.getElementById('loginMessage').style.color = "red";
         });
+    });
 
-        loadingMessage.style.display = 'none';
-      } catch (error) {
-        console.error(error);
-        loadingMessage.style.display = 'none';
-        errorMessage.style.display = 'block';
-      }
-    }
-
-    // Filter list functionality
-    function filterList() {
-      const filter = filterInput.value.toLowerCase();
-      const items = listContainer.getElementsByTagName('li');
-      Array.from(items).forEach(item => {
-        const name = item.querySelector('.name').textContent.toLowerCase();
-        item.style.display = name.includes(filter) ? '' : 'none';
+    function logout() {
+      auth.signOut().then(() => {
+        loginForm.style.display = 'block';
+        welcomePage.style.display = 'none';
       });
     }
 
-    // Initialize the page
-    fetchSharedList();
+    function navigateTo(page) {
+      welcomePage.style.display = 'none';
+
+      if (page === 'sharedList') {
+        sharedListPage.style.display = 'block';
+      }
+      // Add other page navigation as needed
+    }
+
+    function goBack() {
+      sharedListPage.style.display = 'none';
+      welcomePage.style.display = 'block';
+    }
   </script>
 </body>
 </html>
