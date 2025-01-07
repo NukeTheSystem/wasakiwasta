@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ki Tools</title>
+  <title>ki tools</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,10 +11,34 @@
       padding: 0;
       height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: center;
       background: url('bg.gif') no-repeat center center fixed;
       background-size: cover;
+    }
+    #menu {
+      width: 200px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 15px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    }
+    #menu button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+    #menu button:hover {
+      background-color: #45a049;
+    }
+    #content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     #loginForm, #welcomePage {
       background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
@@ -51,14 +75,8 @@
       font-size: 16px;
       text-align: center;
     }
-    #welcomePage {
+    #sharedListPage {
       display: none;
-    }
-    #menu {
-      margin-top: 20px;
-    }
-    #menu button {
-      margin-bottom: 10px;
     }
     #version {
       position: absolute;
@@ -73,35 +91,42 @@
   </style>
 </head>
 <body>
-  <!-- Login Form -->
-  <form id="loginForm">
-    <h2 style="text-align: center;">Login to Ki Tools</h2>
-    <input type="email" id="username" placeholder="Enter email" required />
-    <input type="password" id="password" placeholder="Enter password" required />
-    <button type="submit">Login</button>
-    <p id="loginMessage"></p>
-  </form>
-
-  <!-- Welcome Page -->
-  <div id="welcomePage">
-    <h2>Welcome to Ki Tools</h2>
-    <div id="menu">
-      <button onclick="navigateTo('sharedList')">Shared List</button>
-      <button onclick="navigateTo('status')">Status</button>
-      <button onclick="navigateTo('settings')">Settings</button>
-    </div>
-    <button onclick="logout()">Logout</button>
+  <!-- Menu -->
+  <div id="menu">
+    <h3>Menu</h3>
+    <button onclick="navigateTo('login')">Login</button>
+    <button onclick="navigateTo('sharedList')">Shared List</button>
+    <button onclick="navigateTo('status')">Status</button>
+    <button onclick="navigateTo('settings')">Settings</button>
   </div>
 
-  <!-- Shared List Page -->
-  <div id="sharedListPage" style="display:none;">
-    <h2>Shared List</h2>
-    <div id="listContainer"></div>
-    <button onclick="goBack()">Back</button>
+  <!-- Content Area -->
+  <div id="content">
+    <!-- Login Form -->
+    <form id="loginForm">
+      <h2 style="text-align: center;">login to ki tools</h2>
+      <input type="email" id="username" placeholder="Enter email" required />
+      <input type="password" id="password" placeholder="Enter password" required />
+      <button type="submit">Login</button>
+      <p id="loginMessage"></p>
+    </form>
+
+    <!-- Welcome Page -->
+    <div id="welcomePage">
+      <h2>Welcome to ki tools</h2>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Shared List Page -->
+    <div id="sharedListPage">
+      <h2>Shared List</h2>
+      <div id="listContainer"></div>
+      <button onclick="goBack()">Back</button>
+    </div>
   </div>
 
   <!-- Version Display -->
-  <div id="version">Ver 1.2</div>
+  <div id="version">Ver 2.0</div>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -157,12 +182,15 @@
     }
 
     function navigateTo(page) {
-      welcomePage.style.display = 'none';
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('welcomePage').style.display = 'none';
+      document.getElementById('sharedListPage').style.display = 'none';
 
-      if (page === 'sharedList') {
-        sharedListPage.style.display = 'block';
+      if (page === 'login') {
+        document.getElementById('loginForm').style.display = 'block';
+      } else if (page === 'sharedList') {
+        document.getElementById('sharedListPage').style.display = 'block';
       }
-      // Add other page navigation as needed
     }
 
     function goBack() {
