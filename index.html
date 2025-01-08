@@ -53,12 +53,7 @@
     }
     #welcomePage {
       display: none;
-    }
-    #menu {
-      margin-top: 20px;
-    }
-    #menu button {
-      margin-bottom: 10px;
+      text-align: center;
     }
     #version {
       position: absolute;
@@ -69,6 +64,22 @@
       background-color: rgba(0, 0, 0, 0.5);
       padding: 5px 10px;
       border-radius: 10px;
+    }
+    #sharedList {
+      margin-top: 20px;
+      text-align: left;
+      max-height: 400px;
+      overflow-y: scroll;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .sharedItem {
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
@@ -85,15 +96,11 @@
   <!-- Welcome Page -->
   <div id="welcomePage">
     <h2>Welcome to Ki Tools</h2>
-    <div id="menu">
-      <button onclick="alert('Shared List Clicked')">Shared List</button>
-      <button onclick="alert('Status Clicked')">Status</button>
-    </div>
-    <button onclick="logout()">Logout</button>
+    <div id="sharedList"></div> <!-- Shared list will appear here -->
   </div>
 
   <!-- Version Display -->
-  <div id="version">Ver 0.3</div>
+  <div id="version">Ver 2.1</div>
 
   <!-- Correct Firebase CDN -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -134,9 +141,27 @@
           document.getElementById('loginMessage').style.color = "green";
           console.log("Logged in user:", userCredential.user);
 
-          // Show welcome page
+          // Show welcome page and fetch shared list
           loginForm.style.display = 'none';
           welcomePage.style.display = 'block';
+          welcomePage.innerHTML = ""; // Clear all content in the welcomePage
+
+          // Fetch the shared list from the server
+          fetch('/get-shared-list')
+            .then((response) => response.json())
+            .then((data) => {
+              const sharedListDiv = document.getElementById('sharedList');
+              data.forEach(item => {
+                const div = document.createElement('div');
+                div.classList.add('sharedItem');
+                div.innerHTML = `<strong>${item.name}</strong><br>Level: ${item.level}<br>Nukes: ${item.nukes}<br>KDR: ${item.kdr}<br>KR: ${item.kr}`;
+                sharedListDiv.appendChild(div);
+              });
+            })
+            .catch((error) => {
+              console.error('Error fetching shared list:', error);
+              alert('Error fetching shared list.');
+            });
         })
         .catch((error) => {
           // Login error
@@ -145,14 +170,6 @@
           console.error("Login error:", error.message);
         });
     });
-
-    // Handle logout
-    function logout() {
-      auth.signOut().then(() => {
-        loginForm.style.display = 'block';
-        welcomePage.style.display = 'none';
-      });
-    }
   </script>
 </body>
-</html> 
+</html>
