@@ -65,21 +65,11 @@
       padding: 5px 10px;
       border-radius: 10px;
     }
-    #sharedList {
-      margin-top: 20px;
-      text-align: left;
-      max-height: 400px;
-      overflow-y: scroll;
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      border-radius: 10px;
-    }
-    .sharedItem {
-      margin: 10px 0;
-      padding: 10px;
+    .list-item {
+      margin: 5px 0;
+      padding: 8px;
       background-color: #f9f9f9;
       border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
@@ -96,11 +86,13 @@
   <!-- Welcome Page -->
   <div id="welcomePage">
     <h2>Welcome to Ki Tools</h2>
-    <div id="sharedList"></div> <!-- Shared list will appear here -->
+    <div id="shared-list">
+      <p>Loading shared list...</p>
+    </div>
   </div>
 
   <!-- Version Display -->
-  <div id="version">Ver 2.1</div>
+  <div id="version">Ver 0.3</div>
 
   <!-- Correct Firebase CDN -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -141,26 +133,20 @@
           document.getElementById('loginMessage').style.color = "green";
           console.log("Logged in user:", userCredential.user);
 
-          // Show welcome page and fetch shared list
+          // Show blank welcome page
           loginForm.style.display = 'none';
           welcomePage.style.display = 'block';
-          welcomePage.innerHTML = ""; // Clear all content in the welcomePage
 
-          // Fetch the shared list from the server
+          // Fetch and display shared list
           fetch('/get-shared-list')
-            .then((response) => response.json())
-            .then((data) => {
-              const sharedListDiv = document.getElementById('sharedList');
-              data.forEach(item => {
-                const div = document.createElement('div');
-                div.classList.add('sharedItem');
-                div.innerHTML = `<strong>${item.name}</strong><br>Level: ${item.level}<br>Nukes: ${item.nukes}<br>KDR: ${item.kdr}<br>KR: ${item.kr}`;
-                sharedListDiv.appendChild(div);
-              });
+            .then(response => response.json())
+            .then(data => {
+              const listContainer = document.getElementById('shared-list');
+              listContainer.innerHTML = '<h3>Shared List:</h3><ul>' + data.map(item => `<li class="list-item">${item.name}</li>`).join('') + '</ul>';
             })
-            .catch((error) => {
-              console.error('Error fetching shared list:', error);
-              alert('Error fetching shared list.');
+            .catch(error => {
+              console.error('Error fetching the shared list:', error);
+              document.getElementById('shared-list').innerHTML = '<p>Failed to load shared list.</p>';
             });
         })
         .catch((error) => {
