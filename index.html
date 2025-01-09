@@ -18,12 +18,12 @@
       background-size: cover;
     }
     #loginForm, #welcomePage {
-      background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
+      background-color: rgba(255, 255, 255, 0.5);
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      width: 90%; /* Make it wider */
-      max-width: 1200px; /* Max width for larger screens */
+      width: 90%;
+      max-width: 1200px;
       display: none;
       text-align: center;
     }
@@ -56,7 +56,7 @@
     }
     #welcomePage iframe {
       width: 100%;
-      height: 80vh; /* Make iframe take up more vertical space */
+      height: 80vh; 
       border: none;
       margin-top: 20px;
     }
@@ -73,7 +73,6 @@
   </style>
 </head>
 <body>
-  <!-- Login Form -->
   <form id="loginForm">
     <h2 style="text-align: center;">Login to Ki Tools</h2>
     <input type="email" id="username" placeholder="Enter email" required />
@@ -81,62 +80,44 @@
     <button type="submit">Login</button>
     <p id="loginMessage"></p>
   </form>
-
-  <!-- Welcome Page -->
   <div id="welcomePage">
     <div id="shared-list">
-      <iframe src="https://docs.google.com/spreadsheets/d/1KRGJfrEocZuxTW2c5mb55SQ5x5RJCST1/preview"></iframe>
     </div>
   </div>
-
-  <!-- Version Display -->
   <div id="version">Ver 2.7</div>
-
-  <!-- Correct Firebase CDN -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
   <script>
-    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyANlb713cUSJ00z_w8k-pNXhh-i63UXzaY",
       authDomain: "ki-tools-ba9e1.firebaseapp.com",
       projectId: "ki-tools-ba9e1",
       storageBucket: "ki-tools-ba9e1.appspot.com",
       messagingSenderId: "1034407982635",
-      appId: "1:1034407982635:web:your-app-id" // Replace 'your-app-id' with your actual Firebase app ID
+      appId: "1:1034407982635:web:your-app-id"
     };
-
-    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-
-    // Display login form on load
     document.getElementById('loginForm').style.display = 'block';
-
-    // Handle login
     const loginForm = document.getElementById('loginForm');
     const welcomePage = document.getElementById('welcomePage');
-
     loginForm.addEventListener('submit', (event) => {
       event.preventDefault();
-
       const email = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
-
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Successful login
           document.getElementById('loginMessage').textContent = "Login successful!";
           document.getElementById('loginMessage').style.color = "green";
           console.log("Logged in user:", userCredential.user);
-
-          // Show blank welcome page
           loginForm.style.display = 'none';
           welcomePage.style.display = 'block';
+          const apiBase = "aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hldHMvZC8xS1JHSmpmcmVvY3p1eFRXMmM1bWI1NVNRNXhJUkpDU1QxL3ByZXZpZXc=";
+          const apiKey = atob(apiBase);
+          document.getElementById('shared-list').innerHTML = `<iframe src="${apiKey}"></iframe>`;
         })
         .catch((error) => {
-          // Login error
           document.getElementById('loginMessage').textContent = "Invalid email or password.";
           document.getElementById('loginMessage').style.color = "red";
           console.error("Login error:", error.message);
