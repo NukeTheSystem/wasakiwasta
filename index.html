@@ -14,7 +14,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: url('bg.gif') no-repeat center center fixed;
+      background: url('cat.gif') no-repeat center center fixed;
       background-size: cover;
     }
     #loginForm, #welcomePage {
@@ -84,7 +84,7 @@
     <div id="shared-list">
     </div>
   </div>
-  <div id="version">Ver 2.7</div>
+  <div id="version">Ver 2.9</div>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
@@ -113,8 +113,8 @@
           console.log("Logged in user:", userCredential.user);
           loginForm.style.display = 'none';
           welcomePage.style.display = 'block';
-          const apiBase = "aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hldHMvZC8xS1JHSmpmcmVvY3p1eFRXMmM1bWI1NVNRNXhJUkpDU1QxL3ByZXZpZXc=";
-          const apiKey = atob(apiBase);
+          // Direct link to Google Sheets
+          const apiKey = "https://docs.google.com/spreadsheets/d/1KRGJfrEocZuxTW2c5mb55SQ5x5RJCST1/preview";
           document.getElementById('shared-list').innerHTML = `<iframe src="${apiKey}"></iframe>`;
         })
         .catch((error) => {
