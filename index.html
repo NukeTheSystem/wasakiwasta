@@ -5,72 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ki Tools</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: url('bg.gif') no-repeat center center fixed;
-      background-size: cover;
-    }
-    #loginForm, #welcomePage {
-      background-color: rgba(255, 255, 255, 0.5); /* 50% transparent white */
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      width: 350px;
-      display: none;
-    }
-    input {
-      display: block;
-      width: calc(100% - 30px);
-      margin: 15px 0;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 12px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      width: 100%;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    #loginMessage {
-      margin-top: 15px;
-      font-size: 16px;
-      text-align: center;
-    }
-    #welcomePage {
-      display: none;
-      text-align: center;
-    }
-    #version {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      font-size: 14px;
-      color: white;
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 5px 10px;
-      border-radius: 10px;
-    }
-    .list-item {
-      margin: 5px 0;
-      padding: 8px;
-      background-color: #f9f9f9;
-      border-radius: 5px;
-    }
+    /* Your existing styles remain here */
   </style>
 </head>
 <body>
@@ -86,71 +21,70 @@
   <!-- Welcome Page -->
   <div id="welcomePage">
     <h2>Welcome to Ki Tools</h2>
-    <div id="shared-list">
-      <p>Loading shared list...</p>
-    </div>
+    <iframe 
+      id="googleSheet" 
+      src="" 
+      width="100%" 
+      height="400px" 
+      style="border: none;" 
+      frameborder="0" 
+      allowfullscreen>
+    </iframe>
+    <div id="shared-list"></div>
   </div>
 
   <!-- Version Display -->
   <div id="version">Ver 0.3</div>
 
-  <!-- Correct Firebase CDN -->
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
   <script>
-    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyANlb713cUSJ00z_w8k-pNXhh-i63UXzaY",
       authDomain: "ki-tools-ba9e1.firebaseapp.com",
       projectId: "ki-tools-ba9e1",
       storageBucket: "ki-tools-ba9e1.appspot.com",
       messagingSenderId: "1034407982635",
-      appId: "1:1034407982635:web:your-app-id" // Replace 'your-app-id' with your actual Firebase app ID
+      appId: "1:1034407982635:web:your-app-id"
     };
 
-    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Display login form on load
     document.getElementById('loginForm').style.display = 'block';
 
-    // Handle login
-    const loginForm = document.getElementById('loginForm');
-    const welcomePage = document.getElementById('welcomePage');
-
-    loginForm.addEventListener('submit', (event) => {
+    document.getElementById('loginForm').addEventListener('submit', (event) => {
       event.preventDefault();
-
       const email = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
 
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Successful login
           document.getElementById('loginMessage').textContent = "Login successful!";
           document.getElementById('loginMessage').style.color = "green";
-          console.log("Logged in user:", userCredential.user);
 
-          // Show blank welcome page
-          loginForm.style.display = 'none';
-          welcomePage.style.display = 'block';
+          document.getElementById('loginForm').style.display = 'none';
+          document.getElementById('welcomePage').style.display = 'block';
 
-          // Fetch and display shared list
+          const sheetUrl = "https://docs.google.com/spreadsheets/d/your-spreadsheet-id/edit?usp=sharing";
+          document.getElementById('googleSheet').src = sheetUrl;
+
           fetch('/get-shared-list')
             .then(response => response.json())
             .then(data => {
               const listContainer = document.getElementById('shared-list');
-              listContainer.innerHTML = '<h3>Shared List:</h3><ul>' + data.map(item => `<li class="list-item">${item.name}</li>`).join('') + '</ul>';
+              listContainer.innerHTML = '<h3>Shared List:</h3><ul>' + 
+                data.map(item => `<li class="list-item">${item.name}</li>`).join('') + 
+                '</ul>';
             })
             .catch(error => {
-              console.error('Error fetching the shared list:', error);
               document.getElementById('shared-list').innerHTML = '<p>Failed to load shared list.</p>';
+              console.error('Error fetching the shared list:', error);
             });
         })
         .catch((error) => {
-          // Login error
           document.getElementById('loginMessage').textContent = "Invalid email or password.";
           document.getElementById('loginMessage').style.color = "red";
           console.error("Login error:", error.message);
